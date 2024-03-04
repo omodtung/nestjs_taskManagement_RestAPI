@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 // import { v1 as uuidv1 } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTask } from './dto/create-task.dto';
 import { TaskModule } from './task.module';
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class TaskService {
@@ -16,12 +17,26 @@ export class TaskService {
   }
 
   getTaskByID(id: string): Task {
-    return this.task_s.find((task_s) => task_s.id === id);
+    // get task by id not using validation
+    // return this.task_s.find((task_s) => task_s.id === id);
+
+    //this is code get Task by Id Using validation
+
+    const found = this.task_s.find((task) => task.id === id);
+    if (!found) {
+      throw new NotFoundException(`Task with Id "${id}" not found`);
+    }
+    return found;
   }
 
   DeleteByID(id: string): void {
+    // Them Found va có them validation Neu khong Tim Thay
+    const found = this.getTaskByID(id);
+    this.task_s = this.task_s.filter((task) => task.id !== found.id);
+
+    //Tim kiem Phan Tu nhung Khong thong Bao Khi Khong Tim Thay --> Khong Co Validation Neu Khong Tim Thay
     // khi khong co
-    this.task_s = this.task_s.filter((task_s) => task_s.id !== id);
+    // this.task_s = this.task_s.filter((task_s) => task_s.id !== id);
 
     console.log(this.task_s);
   }

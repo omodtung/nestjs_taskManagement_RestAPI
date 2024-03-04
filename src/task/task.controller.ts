@@ -12,6 +12,7 @@ import { TaskService } from './task.service';
 import { Task, TaskStatus } from './task.model';
 import { CreateTask } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-task-filter.dto';
+import { UpdateTaskStatusDto as UpdateTaskDto } from './dto/update-task-status.dto';
 // import { stringify } from 'querystring';
 @Controller('task')
 export class TaskController {
@@ -41,11 +42,14 @@ export class TaskController {
   DeleteByID(@Param('id') id: string): void {
     return this.tasksService.DeleteByID(id);
   }
-  @Patch('/:id/status')
+  @Patch('/:id')
   updateTaskStatus(
     @Param('id') id: string,
-    @Body('status') status: TaskStatus,
+    //  update nhung khong dung validation Chi co Update Khong
+    // @Body('status') status: TaskStatus
+    @Body() UpdateTaskStatusDto: UpdateTaskDto,
   ): Task {
+    const { status } = UpdateTaskStatusDto;
     return this.tasksService.taskStatusUpdate(id, status);
   }
   // @Post()
