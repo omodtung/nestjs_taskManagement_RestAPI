@@ -9,7 +9,7 @@ describe('TaskService', () => {
       providers: [TaskService],
     }).compile();
 
-    service = module.get<TaskService>(TaskService);
+    // service = module.get<TaskService>(TaskService);
   });
 
   it('should be defined', () => {
